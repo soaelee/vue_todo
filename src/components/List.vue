@@ -1,46 +1,34 @@
 <template>
   <div>
-    <ul>
-      <li v-for="todo in todos" :key="todo" class="shadow">
-        {{ todo }}
-        <span class="removeBtn" @click="deleteToDo">
+    <transition-group name="list" tag="ul">
+      <li v-for="(todo, index) in todos" :key="todo.item" class="shadow">
+        <span class="buttonWrap" @click="$emit('toggleToDo', todo, index)">
+          <font-awesome-icon
+            icon="fa-solid fa-check"
+            class="checkBtn"
+            :class="{ checkBtnCompleted: todo.completed }"
+          />
+        </span>
+        <span :class="{ textCompleted: todo.completed }">{{ todo.item }}</span>
+        <span class="buttonWrap" @click="$emit('removeToDo', todo.item, index)">
           <font-awesome-icon
             icon="fa-solid fa-trash-arrow-up"
             class="deleteBtn"
           />
         </span>
       </li>
-    </ul>
+    </transition-group>
   </div>
 </template>
 
 <script>
 export default {
   name: "List",
-  data: function() {
-    return {
-      todos: []
-    };
-  },
-  methods: {
-    deleteToDo: function() {
-      console.log("hi");
-    }
-  },
-  created: function() {
-    if (localStorage.length > 0) {
-      console.log(localStorage);
-      for (let i = 0; i < localStorage.length; i++) {
-        if (localStorage.key(i) !== "loglevel:webpack-dev-server") {
-          this.todos.push(localStorage.key(i));
-        }
-      }
-    }
-  }
+  props: ["todos"]
 };
 </script>
 
-<style>
+<style scoped>
 ul {
   list-style-type: none;
   padding-left: 0px;
@@ -74,7 +62,19 @@ li {
   color: #b3adad;
 }
 
-.removeBtn {
+.buttonWrap {
   color: #de4343;
+}
+
+/* 리스트 아이템 트랜지현 효과 */
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s;
+}
+
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>

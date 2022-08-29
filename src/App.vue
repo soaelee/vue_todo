@@ -1,9 +1,10 @@
 <template>
   <div id="app">
     <Header />
-    <Input />
-    <List />
-    <Footer />
+    <Input @addToDo="addToDo" />
+    <List :todos="todos" @removeToDo="removeToDo" @toggleToDo="toggleToDo" />
+    <Footer @clearToDos="clearToDos" />
+    <portal-target name="destination" />
   </div>
 </template>
 
@@ -14,12 +15,49 @@ import Input from "./components/Input.vue";
 import List from "./components/List.vue";
 export default {
   name: "App",
+  data: function() {
+    return {
+      todos: []
+    };
+  },
   components: {
     // 컴포넌트 태그명 : 컴포넌트 내용
     Header,
     Footer,
     Input,
     List
+  },
+  created: function() {
+    if (localStorage.length > 0) {
+      console.log(localStorage);
+      for (let i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i) !== "loglevel:webpack-dev-server") {
+          const value = localStorage.getItem(localStorage.key(i));
+          console.log(value);
+          this.todos.push(JSON.parse(value));
+        }
+      }
+    }
+  },
+  methods: {
+    addToDo: function(todo) {
+      const obj = { completed: false, item: todo };
+      localStorage.setItem(todo, JSON.stringify(obj));
+      this.todos.push(obj);
+    },
+    removeToDo: function(todo, index) {
+      this.todos.splice(index, 1);
+      localStorage.removeItem(todo);
+    },
+    toggleToDo: function(todo, index) {
+      const newTodo = { ...todo, completed: !todo.completed };
+      this.todos.splice(index, 1, newTodo);
+      localStorage.setItem(todo.item, JSON.stringify(newTodo));
+    },
+    clearToDos: function() {
+      this.todos = [];
+      localStorage.clear();
+    }
   }
 };
 </script>
