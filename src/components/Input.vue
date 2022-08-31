@@ -29,22 +29,22 @@ import Modal from "./common/Modal.vue";
 
 export default {
   name: "Input",
-  data: function() {
+  data() {
     return {
       value: "",
       showModal: false
     };
   },
   methods: {
-    addToDo: function() {
-      if (this.value === "") {
+    addToDo() {
+      if (this.value.trim() === "") {
         this.showModal = true;
         return;
       }
-      this.$emit("addToDo", this.value);
+      this.$store.commit("addToDo", this.value.trim());
       this.clearInput();
     },
-    clearInput: function() {
+    clearInput() {
       this.value = "";
     }
   },

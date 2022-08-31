@@ -1,5 +1,5 @@
 <template>
-  <div class="clearAllContainer" @click="$emit('clearToDos')">
+  <div class="clearAllContainer" @click="clearToDos">
     <span class="clearAllBtn">
       Clear All
     </span>
@@ -7,8 +7,13 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
-  name: "Footer"
+  name: "Footer",
+  methods: {
+    ...mapMutations(["clearToDos"])
+  }
 };
 </script>
 

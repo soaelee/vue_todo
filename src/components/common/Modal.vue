@@ -29,12 +29,12 @@
 export default {
   name: "modal",
   props: ["show"],
-  mounted: function() {
+  mounted() {
     const app = document.getElementsByTagName("body");
     console.log(app.style);
     app[0].style.overflow = "hidden";
   },
-  destroyed: function() {
+  destroyed() {
     const app = document.getElementsByTagName("body");
     app[0].style.overflow = "visible";
   }
